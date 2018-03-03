@@ -15,12 +15,12 @@ namespace Octokit
     /// </remarks>
     public class ApiPagination : IApiPagination
     {
-        public async Task<IReadOnlyList<T>> GetAllPages<T>(Func<Task<IReadOnlyPagedCollection<T>>> getFirstPage, Uri uri)
+        public async Task<IReadOnlyList<T>> GetAllPages<T>(Func<Tuple<bool,Task<IReadOnlyPagedCollection<T>>>> getFirstPage, Uri uri)
         {
             Ensure.ArgumentNotNull(getFirstPage, "getFirstPage");
             try
             {
-                var page = await getFirstPage().ConfigureAwait(false);
+                var page = await getFirstPage().Item2.ConfigureAwait(false);
 
                 var allItems = new List<T>(page);
                 while ((page = await page.GetNextPage().ConfigureAwait(false)) != null)

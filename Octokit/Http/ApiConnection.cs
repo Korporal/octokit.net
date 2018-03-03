@@ -184,6 +184,8 @@ namespace Octokit
         {
             Ensure.ArgumentNotNull(uri, "uri");
 
+            var tuple = Tuple.Create<bool,Task<IReadOnlyPagedCollection<T>>>(false, GetPage<T>(uri, parameters, accepts));
+
             return _pagination.GetAllPages(async () => await GetPage<T>(uri, parameters, accepts).ConfigureAwait(false), uri);
         }
 
